@@ -13,8 +13,15 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('restaurant_id');
+            $table->unsignedBigInteger('user_id')->constrained(
+                'users',
+                'id'
+            )->onDelete('cascade');
+            $table->unsignedBigInteger('item_id')->constrained(
+                'items',
+                'id'
+            )->onDelete('cascade');
+
             $table->timestamps();
         });
     }

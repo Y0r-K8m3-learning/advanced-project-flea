@@ -27,40 +27,25 @@
 
 <body class="font-sans antialiased">
     <!-- Header (固定) -->
-    <div class="header" style="position: fixed; top: 0; width: 100%; z-index: 1000; background-color: white; ">
-        <div class="d-flex align-items-center">
-            <!-- メニューボタンとテキスト -->
-            <div class="menu-button-container d-flex align-items-center" onclick="toggleMenu()">
-                <div class="menu-button bg-blue-500 border-start-0" id="menuButton" style="cursor: pointer;">
-                    <div class="menu-icon">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </div>
-                <div id="menuText" style="margin-left: 10px; color: #007bff; font-size: 24px;">
-                    <h1 class="fw-bold">Rese</h1>
-                </div>
-            </div>
-        </div>
+    <div class="header" style="position: fixed; top: 0; width: 100%; z-index: 1000; background-color: black; color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <span class="material-symbols-outlined">
+            <img src="{{ asset('icons/logo.svg') }}" alt="Log Icon" style="height: 24px; margin-right: 10px;"> <!-- アイコンを追加 -->
 
-        <!-- ハンバーガーメニュー -->
-        <div class="side-menu" id="sideMenu" style="position: fixed; top: 0; left: 0; width: 250px; height: 100vh; background-color: #f8f9fa; transform: translateX(-100%); transition: transform 0.3s;">
-            <div class="close-button" onclick="toggleMenu()" style="cursor: pointer; font-size: 24px; margin: 10px;">×</div>
-            <a class="nav-link active" href="/">Home</a>
+        </span>
+        <div>
             @if (Auth::check())
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                 @csrf
                 <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
-                    <div class="nav-link">
+                    <div class="nav-link" style="color: white;">
                         {{ __('Log Out') }}
                     </div>
                 </x-dropdown-link>
             </form>
-            <a class="nav-link" href="/mypage">Mypage</a>
+            <a class="nav-link" href="/mypage" style="color: white;">Mypage</a>
             @else
-            <a class="nav-link" href="/register">Registration</a>
-            <a class="nav-link" href="/login">Login</a>
+            <a class="nav-link" href="/register" style="color: white; margin-right: 10px;">Registration</a>
+            <a class="nav-link" href="/login" style="color: white;">Login</a>
             @endif
         </div>
     </div>
@@ -87,29 +72,12 @@
 
     <!-- Custom JS -->
     <script>
-        function toggleMenu() {
-            var menu = document.getElementById('sideMenu');
-            var button = document.getElementById('menuButton');
-            var text = document.getElementById('menuText');
 
-            if (menu && button) {
-                menu.classList.toggle('open');
-                if (menu.classList.contains('open')) {
-                    menu.style.transform = 'translateX(0)';
-                    button.style.display = 'none';
-                    text.style.display = 'none';
-                } else {
-                    menu.style.transform = 'translateX(-100%)';
-                    button.style.display = 'flex';
-                    text.style.display = 'flex';
-                }
-            } else {
-                console.error('Menu or button element not found.');
-            }
-        }
     </script>
 </body>
 
 
+
+</html>
 
 </html>

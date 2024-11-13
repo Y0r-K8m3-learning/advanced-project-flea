@@ -52,7 +52,7 @@
                                     lock
                                 </span>
                                 <!-- パスワード -->
-                                <x-my-text-input id="password" class="ring-0 focus:outline-none focus:ring-0 focus:border-transparent" type="password" name="password" autocomplete="new-password" placeholder="Password" />
+                                <x-my-text-input id="password" class="ring-0 focus:outline-none focus:ring-0 focus:border-transparent" type="password" name="password" autocomplete="new-password" placeholder="Passwossrd" />
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
                             </div>
                             <x-input-error :messages="$errors->get('password')" class="mt-2 pl-9 ms-4" />
