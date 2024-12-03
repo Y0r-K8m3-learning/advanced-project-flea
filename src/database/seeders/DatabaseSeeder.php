@@ -14,11 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(RolesTableSeeder::class);
-        $this->call(UserSeeder::class);
-        //User::factory(10)->create(); ユーザランダム作成用
-        $this->call(AreasTableSeeder::class);
-        $this->call(GenresTableSeeder::class);
-        $this->call(RestaurantsTableSeeder::class);
+        // 作成した Seeder を呼び出す
+        $this->call([
+            CategoriesTableSeeder::class,        // Users Seeder
+            ConditionsTableSeeder::class,        // Users Seeder
+            RolesTableSeeder::class, // ItemCategory Seeder
+            UserSeeder::class,        // Users Seeder
+            User_DetailsTableSeeder::class, // UsersDetails Seeder
+            ItemsTableSeeder::class,        // Items Seeder
+            FavoritesTableSeeder::class,    // Favorites Seeder
+            ReviewsTableSeeder::class,      // Reviews Seeder
+            Item_CategoryTableSeeder::class, // ItemCategory Seeder
+            OrdersTableSeeder::class, // ItemCategory Seeder
+        ]);
     }
 }

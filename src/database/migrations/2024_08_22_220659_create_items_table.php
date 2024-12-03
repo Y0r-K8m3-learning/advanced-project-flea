@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer(
                 'price'
             );
-            $table->integer('description');
+            $table->string('description');
 
             $table->unsignedBigInteger('item_category_id')->constrained(
                 'item_category',

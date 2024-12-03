@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\RestaurantController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MyPageController;
 use App\Http\Controllers\StripePaymentsController;
+use App\Http\Controllers\PurchaseController;
 
 //ユーザ登録
 Route::get('/register', [AuthController::class, 'getRegister']);
@@ -16,7 +17,7 @@ Route::post('/register', [AuthController::class, 'postRegister']);
 //ログイン
 Route::get('/login', [AuthController::class, 'getLogin'])->name('login');;
 Route::post('/login', [AuthController::class, 'postLogin']);
-Route::get('/restaurant/{id}', [RestaurantController::class, 'detail'])->name('restaurant.detail');
+Route::get('/items/{id}', [RestaurantController::class, 'detail'])->name('items.detail');
 
 
 Route::get('/', [
@@ -29,8 +30,56 @@ Route::get('/complete', [StripePaymentsController::class, 'complete'])->name('co
 
 Route::get('/reservation/complete', [RestaurantController::class, 'complete'])->name('reservation.complete');
 
-Route::get('/', [RestaurantController::class, 'index'])->name('index');
-Route::get('/', [RestaurantController::class, 'index'])->name('home');
+Route::get('/', [ItemController::class, 'index'])->name('index');
+Route::get('/', [ItemController::class, 'index'])->name('home');
+
+Route::post('/items/search', [ItemController::class, 'search'])->name('items.search');
+
+
+Route::get('/checkout', [PurchaseController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/process', [PurchaseController::class, 'process'])->name('checkout.process');
+
+Route::get('/address/edit', [PurchaseController::class, 'edit'])->name('address.edit');
+Route::put('/address/update', [PurchaseController::class, 'update'])->name('address.update');
+
+Route::get('/payment/edit', [PurchaseController::class, 'edit'])->name('payment.edit');
+Route::put('/payment/update', [PurchaseController::class, 'update'])->name('payment.update');
+
+// 購入ページ
+Route::get('/purchase', [PurchaseController::class, 'index'])->name('purchase.index');
+
+// 購入処理
+Route::post('/purchase/process', [PurchaseController::class, 'process'])->name('purchase.process');
+
+Route::post('/purchase/complete', [CheckoutController::class, 'complete'])->name('purchase.complete');
+Route::get('/purchase/success', function () {
+    return view('purchase_success');
+})->name('purchase.success');
+
+
+Route::get('/item/create', [ItemController::class, 'itemCreate'])->name('item.create');
+
+// 住所変更ページ
+Route::get('/address/edit', [MyPageController::class, 'address_index'])->name('address.edit');
+
+Route::get('/mypage/item', [MypageController::class, 'index'])->name('mypage');
+
+// 住所更新
+Route::put('/address/update', [MyPageController::class, 'address_update'])->name('address.update');
+
+// プロフィール編集ページ
+Route::get('/profile/edit', [MyPageController::class, 'profile'])->name('profile.edit');
+
+// プロフィール更新
+Route::put('/profile/update', [MyPageController::class, 'update'])->name('profile.update');
+
+// プロフィール更新
+Route::get('/address/update', [MyPageController::class, 'address_index'])->name('address.update');
+
+// 商品を保存
+Route::post('/items', [ItemController::class, 'store'])->name('item.store');
+
+Route::get('/items/{id}', [ItemController::class, 'showDetail'])->name('items.detail');
 
 Route::get('/register/complete', function () {
     return view('register_complete');
@@ -52,7 +101,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/payment/index', [StripePaymentsController::class, 'index'])->name('paymentindex');
     Route::post('/payment', [StripePaymentsController::class, 'payment'])->name('payment.store');
 
-    
+
 
 
     Route::get('/reservations/verify/{id}', [RestaurantController::class, 'verify'])->name('reservation.verify');

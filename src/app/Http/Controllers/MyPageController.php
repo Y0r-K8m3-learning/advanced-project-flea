@@ -10,35 +10,66 @@ use Carbon\Carbon;
 
 class MyPageController extends Controller
 {
+
+    public function address_index()
+    {
+        // ダミーデータをビューに渡す
+        $user = (object) [
+            'username' => 'ダミー太郎',
+            'postcode' => '123-4567',
+            'address' => 'XXXXX',
+            'building' => 'ダミービル101',
+            'icon' => null, // アイコンは未設定
+        ];
+        return view('auth.address_edit', ['user' => $user]);
+    }
+
+    public function address_edit() {}
+
+    public function profile()
+    {
+        // ダミーデータをビューに渡す
+        $user = (object) [
+            'username' => 'hoge',
+            'postcode' => '123-4567',
+            'address' => 'XXXX',
+            'building' => 'hogeービル101',
+            'icon' => null, // アイコンは未設定
+        ];
+
+        //return view('auth.profile_edit', ['user' => auth()->user()]);
+        return view('auth.profile_edit', ['user' => $user]);
+    }
     public function index()
     {
-        $user = Auth::user();
+        // ダミーデータの設定
+        $listings = [
+            ['name' => '商品A', 'image' => 'images/product_a.png', 'price' => 1200],
+            ['name' => '商品B', 'image' => 'images/product_b.png', 'price' => 2500],
+        ];
 
-        $now = Carbon::now();
+        $purchases = [
+            ['name' => '商品C', 'image' => 'images/product_c.png', 'price' => 3000],
+            ['name' => '商品D', 'image' => 'images/product_d.png', 'price' => 1800],
+        ];
 
-        $reservations = Reservation::where('user_id', $user->id)->where('reservation_date', '>', $now->format('Y-m-d'))
-            ->orWhere(function ($query) use ($now) {
-                $query->where(
-                    'reservation_date',
-                    '=',
-                    $now->format('Y-m-d')
-                )
-                    ->where(
-                        'reservation_time',
-                        '>',
-                        $now->format('H:i:s')
-                    );
-            })
-            ->with('restaurant')
-            ->get();
+        // ビューにダミーデータを渡す
+        return view('mypage', compact('listings', 'purchases'));
 
-        $favorites = Favorite::where('user_id', $user->id)->with('restaurant')->get();
 
-        foreach ($reservations as $reservation) {
-            $reservation->formatted_time = Carbon::createFromFormat('H:i:s', $reservation->reservation_time)->format('H:i');
-        }
+        $user = auth()->user();
 
-        return view('mypage', compact('reservations', 'favorites'));
+        // ダミーデータでリストを作成（後でDB接続に切り替え）
+        $listings = Product::where('user_id', $user->id)->get(); // 出品商品
+        $purchases = Product::whereHas('purchases', function ($query) use ($user) {
+            $query->where('user_id', $user->id); // 購入商品
+        })->get();
+
+        return view('mypage', [
+            'user' => $user,
+            'listings' => $listings,
+            'purchases' => $purchases,
+        ]);
     }
 
     public function destroy($id)

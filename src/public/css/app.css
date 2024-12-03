@@ -1,4 +1,9 @@
 
+ .search-text::placeholder {
+            color: #000000; /* 好みの色に変更 */
+            opacity: 1; /* 透明度を調整（0から1の間） */
+        }
+ 
  /* メニューボタンのスタイル */
    .menu-button-container {
        display: flex;

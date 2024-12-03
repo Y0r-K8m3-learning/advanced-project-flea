@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\Item;
 use App\Http\Requests\ReservationRequest;
 
 class RestaurantController extends Controller
@@ -21,35 +21,10 @@ class RestaurantController extends Controller
     public function index(Request $request)
     {
 
-        $areaId = $request->input('area');
-        $genreId = $request->input('genre');
-        $name = $request->input('name');
-        $query = Restaurant::query();
+        // おすすめ: ランダムに5件取得
+        $items = Item::inRandomOrder()->get();
 
-        if ($areaId) {
-
-            $query->where('area_id', $areaId);
-        }
-
-        if ($genreId) {
-            $query->where('genre_id', $genreId);
-        }
-        if ($name) {
-            $query->where('name', 'LIKE', '%' . $name . '%');
-        }
-
-        $restaurants = $query->with(['area', 'genre'])->get();
-
-        $areas = Area::all();
-        $genres = Genre::all();
-        $user = Auth::user();
-
-        $favoriteRestaurantIds = $user ? $user->favorites()->pluck('restaurant_id')->toArray() : [];
-
-        return view(
-            'restaurant',
-            compact('restaurants', 'areas', 'genres', 'favoriteRestaurantIds')
-        );
+        return view('items.index', compact('items'));
     }
 
 
@@ -88,9 +63,12 @@ class RestaurantController extends Controller
 
     public function detail($restaurant_id)
     {
-        $restaurant = Restaurant::with(['area', 'genre'])->findOrFail($restaurant_id);
+        $item =
+            ['image' => 'storage/images/items/juice.png', 'name' => '商品1'];
 
-        return view('detail', compact('restaurant'));
+        // $restaurant = Restaurant::with(['area', 'genre'])->findOrFail($restaurant_id);
+
+        return view('detail', compact('item'));
     }
 
     public function store(ReservationRequest  $request)

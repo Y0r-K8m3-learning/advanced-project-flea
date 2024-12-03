@@ -38,6 +38,10 @@
             background-color: red;
         }
 
+          .active {
+            color: red; /* クリック時に赤くする */
+        }
+
 /*虫眼鏡*/
 .material-symbols-outlined {
   font-variation-settings:
