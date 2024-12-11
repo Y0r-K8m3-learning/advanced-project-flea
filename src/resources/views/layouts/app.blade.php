@@ -64,10 +64,11 @@
                 </x-dropdown-link>
             </form>
             <a class="nav-link" href="/mypage" style="color: white;">Mypage</a>
+            <a class="btn btn-light border text-black" href="/item/create">出品</a>
             @else
             <a class="nav-link" href="/register" style="color: white;">Registration</a>
             <a class="nav-link" href="/login" style="color: white;">Login</a>
-            <a class="btn btn-light border text-black" href="/item/create">出品</a>
+
 
             @endif
         </div>

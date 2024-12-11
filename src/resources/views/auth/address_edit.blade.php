@@ -11,12 +11,12 @@
         <form action="{{ route('address.update') }}" method="POST">
             @csrf
             @method('PUT')
-
+            {{$user->username}}
             <!-- 郵便番号 -->
             <div class="mb-4">
                 <label for="postcode" class="form-label">郵便番号</label>
-                <input type="text" name="postcode" id="postcode" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode', $user->postcode) }}" placeholder="例: 123-4567">
-                @error('postcode')
+                <input type="text" name="post_code" id="post_code" class="form-control @error('postcode') is-invalid @enderror" value="{{ old('post_code', $user->post_code) }}" placeholder="例: 123-4567">
+                @error('post_code')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>

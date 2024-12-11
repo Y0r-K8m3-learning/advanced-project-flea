@@ -17,7 +17,7 @@ Route::post('/register', [AuthController::class, 'postRegister']);
 //ログイン
 Route::get('/login', [AuthController::class, 'getLogin'])->name('login');;
 Route::post('/login', [AuthController::class, 'postLogin']);
-Route::get('/items/{id}', [RestaurantController::class, 'detail'])->name('items.detail');
+Route::get('/items/{id}', [ItemController::class, 'showDetail'])->name('items.detail');
 
 
 Route::get('/', [
@@ -33,7 +33,7 @@ Route::get('/reservation/complete', [RestaurantController::class, 'complete'])->
 Route::get('/', [ItemController::class, 'index'])->name('index');
 Route::get('/', [ItemController::class, 'index'])->name('home');
 
-Route::post('/items/search', [ItemController::class, 'search'])->name('items.search');
+Route::get('/item/search', [ItemController::class, 'search'])->name('item.search');
 
 
 Route::get('/checkout', [PurchaseController::class, 'index'])->name('checkout.index');
@@ -42,22 +42,25 @@ Route::post('/checkout/process', [PurchaseController::class, 'process'])->name('
 Route::get('/address/edit', [PurchaseController::class, 'edit'])->name('address.edit');
 Route::put('/address/update', [PurchaseController::class, 'update'])->name('address.update');
 
-Route::get('/payment/edit', [PurchaseController::class, 'edit'])->name('payment.edit');
+Route::get('/payment/edit/{item_id}', [PurchaseController::class, 'edit'])->name('payment.edit');
+
 Route::put('/payment/update', [PurchaseController::class, 'update'])->name('payment.update');
 
 // 購入ページ
-Route::get('/purchase', [PurchaseController::class, 'index'])->name('purchase.index');
+Route::get('/purchase/{item}', [PurchaseController::class, 'show'])->name('purchase.show');
 
 // 購入処理
 Route::post('/purchase/process', [PurchaseController::class, 'process'])->name('purchase.process');
 
-Route::post('/purchase/complete', [CheckoutController::class, 'complete'])->name('purchase.complete');
+Route::post('/purchase/complete', [PurchaseController::class, 'complete'])->name('purchase.complete');
 Route::get('/purchase/success', function () {
     return view('purchase_success');
 })->name('purchase.success');
 
 
 Route::get('/item/create', [ItemController::class, 'itemCreate'])->name('item.create');
+
+Route::post('/item/store', [ItemController::class, 'store'])->name('item.store');
 
 // 住所変更ページ
 Route::get('/address/edit', [MyPageController::class, 'address_index'])->name('address.edit');
@@ -79,7 +82,14 @@ Route::get('/address/update', [MyPageController::class, 'address_index'])->name(
 // 商品を保存
 Route::post('/items', [ItemController::class, 'store'])->name('item.store');
 
-Route::get('/items/{id}', [ItemController::class, 'showDetail'])->name('items.detail');
+Route::get('/item/detail/{id}', [ItemController::class, 'showDetail'])->name('items.detail');
+
+Route::post('/item/detail/store', [ItemController::class, 'review_store'])->name('reviews.store');
+
+Route::post('/favorites/toggle', [ItemController::class, 'favoriteToggle'])->name('favorites.toggle');
+
+
+
 
 Route::get('/register/complete', function () {
     return view('register_complete');

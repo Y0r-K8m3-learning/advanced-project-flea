@@ -15,10 +15,10 @@
     <!-- 初期表示 -->
     <div class="d-flex mt-3">
         <div id="recommend" class="section-title ms-5">
-            <a href="{{ route('items.search', ['recommend' => true]) }}" class="section-title ms-5">おすすめ</a>
+            <a href="{{ route('item.search', ['recommend' => true]) }}" class="section-title ms-5 {{ request('recommend') ? 'active-link' : '' }}">おすすめ</a>
         </div>
         <div id="mylist" class="section-title ms-5">
-            <a href="{{ route('items.search', ['mylist' => true]) }}" class="section-title ms-5">マイリスト</a>
+            <a href="{{ route('item.search', ['mylist' => true]) }}" class="section-title ms-5">マイリスト</a>
         </div>
     </div>
 

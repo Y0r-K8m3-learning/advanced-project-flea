@@ -38,8 +38,9 @@
             background-color: red;
         }
 
-          .active {
-            color: red; /* クリック時に赤くする */
+   .active-link {
+            color: red;
+            font-weight: bold;
         }
 
 /*虫眼鏡*/

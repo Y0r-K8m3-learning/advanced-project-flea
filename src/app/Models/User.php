@@ -53,10 +53,17 @@ class User extends Authenticatable implements MustVerifyEmailContract
         ];
     }
 
+    public function userdetail()
+    {
+        return $this->belongsTo(UserDetail::class, 'user_id');
+    }
+
     public function restaurant()
     {
         return $this->hasMany(Restaurant::class, 'owner_id');
     }
+
+
     public function favorites()
     {
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps();

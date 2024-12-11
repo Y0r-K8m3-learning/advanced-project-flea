@@ -3,16 +3,25 @@ $(document).ready(function () {
         e.preventDefault(); // デフォルトのリンク動作を防止
 
         const url = $(this).find('a').attr('href');
+                console.log(url);
 
+        $('#recommend a, #mylist a').removeClass('active-link');
+        // クリックしたリンクに 'active-link' を追加
+        $(this).find('a').addClass('active-link');
         $.ajax({
             url: url,
             method: "GET",
             success: function (response) {
+                if (response.redirect) {
+
+            window.location.href = response.redirect; // ログイン画面にリダイレクト
+        }
+
                 // response.items が存在するか確認
-              
-                    const $itemGrid = $('.container .row');
+                const $itemGrid = $('.container .row');
+                
                     $itemGrid.empty(); // 現在のアイテムをクリア
-  if (response.items && Array.isArray(response.items)) {
+                    if (response.items && Array.isArray(response.items)) {
                     // 新しいデータをレンダリング
                     response.items.forEach(item => {
                         $itemGrid.append(`
@@ -24,11 +33,10 @@ $(document).ready(function () {
                             </div>
                         `);
                     });
-                } else {
-                    console.warn('データ形式が正しくありません。', response);
-                }
+                    } 
             },
             error: function () {
+                  console.log(response);
                 console.error('検索に失敗しました');
             }
         });

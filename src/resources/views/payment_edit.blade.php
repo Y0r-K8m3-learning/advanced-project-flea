@@ -20,16 +20,18 @@
             @method('PUT')
 
             <div class="mb-3">
+                <input type="text" name="item_id" value="{{$item_id}}" class="form-check-input" hidden>
+
                 <label class="form-check">
-                    <input type="radio" name="payment_method" value="stripe" class="form-check-input" checked>
+                    <input type="radio" name="payment_method" value="card" class="form-check-input" checked>
                     <span class="form-check-label">クレジットカード </span>
                 </label>
                 <label class="form-check">
-                    <input type="radio" name="payment_method" value="stripe" class="form-check-input" checked>
+                    <input type="radio" name="payment_method" value="customer_balance" class="form-check-input" checked>
                     <span class="form-check-label">銀行振込</span>
                 </label>
                 <label class="form-check">
-                    <input type="radio" name="payment_method" value="stripe" class="form-check-input" checked>
+                    <input type="radio" name="payment_method" value="konbini" class="form-check-input" checked>
                     <span class="form-check-label">コンビニ</span>
                 </label>
             </div>

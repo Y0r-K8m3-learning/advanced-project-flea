@@ -19,29 +19,27 @@
 
 <x-app-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
-
     <div class="container">
         <div class="row">
             <!-- 左側: 商品画像 -->
             <div class="col-md-6 fw-bold">
                 <div class="mb-4 mt-3">
-                    <img src="{{ asset($item['image']) }}" class="img-fluid rounded border" alt="{{ $item['name'] }}">
+                    <img src="{{ asset($item['image_url']) }}" class="img-fluid rounded border" alt="{{ $item['name'] }}">
                 </div>
             </div>
-
             <!-- 右側: 商品情報 -->
             <div class="col-md-6 product-details">
                 <div class="rounded shadow p-4">
                     <!-- 商品名 -->
                     <h2 class="mb-3">{{ $item['name'] }}</h2>
-                    <p class="mb-3">ブランド名：{{ $item['brand'] ?? 'N/A' }}</p>
+                    <p class="mb-3">ブランド名：{{ $item['brand'] ?? '' }}</p>
                     <h4 class="mb-3">価格：¥{{ number_format($item['price']) }}</h4>
 
                     <!-- 星マーク・吹き出しマーク -->
                     <div class="d-flex align-items-center mb-4">
-                        <svg class="star-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="star-icon" data-item-id=" {{ $item->id }}" viewBox="0 0 24 24" style="cursor: pointer;">
                             <polygon
-                                fill="white"
+                                fill="{{ $item->is_favorite ? 'yellow' : 'white' }}"
                                 stroke="black"
                                 stroke-width="2"
                                 points="12,2 15,8.5 22,9.3 17,14 18.5,21 12,17.5 5.5,21 7,14 2,9.3 9,8.5" />
@@ -51,41 +49,53 @@
                         </span>
                     </div>
 
-                    <!-- コメント欄 -->
                     <div class="comment-section" id="comment-section">
-                        <div class="user-comment">
+                        @forelse ($comments as $comment)
+                        <div class="user-comment {{ $comment->user->id == auth()->id() ? 'own-comment' : '' }}">
                             <div style="display: flex; align-items: center;">
-                                <img src="https://via.placeholder.com/40" alt="User Icon">
-                                <span class="user-name">XXXXX</span>
+                                <img src="{{ $comment->user->profile_image_url ?? 'https://via.placeholder.com/40' }}" alt="User Icon">
+                                <span class="user-name">{{ $comment->user->name }}</span>
                             </div>
-                            <p>XXXXX</p>
+                            <p>{{ $comment->comment }}</p>
                         </div>
-                        <div class="user-comment">
-                            <div style="display: flex; align-items: center;">
-                                <img src="https://via.placeholder.com/40" alt="User Icon">
-                                <span class="user-name">XXXXX</span>
-                            </div>
-                            <p>XXXXX</p>
-                        </div>
-                        <div class="comment-input">
-                            <textarea placeholder="コメントを入力..."></textarea>
-                            <button>コメントを送信</button>
-                        </div>
-                    </div>
+                        @empty
+                        <p>コメントはまだありません。</p>
+                        @endforelse
+                        <!-- コメント入力欄 -->
 
+
+                        @auth
+                        <div class="comment-input">
+                            <form action="{{ route('reviews.store') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="item_id" value="{{ $item['id'] }}">
+                                <textarea name="comment" placeholder="コメントを入力..." required></textarea>
+                                <button type="submit">コメントを送信</button>
+                            </form>
+                        </div>
+                        @endauth
+                    </div>
                     <!-- 購入ボタン -->
                     <div class="mb-4">
-                        <button type="submit" class="btn btn-primary w-100 shadow rounded" id="purchase-button">
+                        <a href="{{ route('purchase.show', ['item' => $item['id']]) }}" class="btn btn-danger w-100 shadow rounded" id="purchase-button">
                             購入する
-                        </button>
+                        </a>
                     </div>
 
                     <!-- 「商品説明」以下の内容 -->
                     <h5 class="mb-3">商品説明</h5>
                     <p class="mb-4">{{ $item['description'] ?? '説明がありません。' }}</p>
                     <h5 class="mb-3">商品の情報</h5>
-                    <p class="mb-3">カテゴリー：{{ $item['category'] ?? '未分類' }}</p>
-                    <p>商品の状態：{{ $item['condition'] ?? '不明' }}</p>
+                    <p class="mb-3">
+                        カテゴリー：
+                        <span>
+                            @foreach($item->categories as $category)
+                            {{ $category['name'] ?? '未分類' }}
+                            @endforeach
+                        </span>
+
+                    </p>
+                    <p>商品の状態：{{ $item->condition->name ?? '不明' }}</p>
                 </div>
             </div>
         </div>

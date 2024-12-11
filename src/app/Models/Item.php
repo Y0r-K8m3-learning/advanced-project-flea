@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Seeders\ConditionsTableSeeder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,7 @@ class Item extends Model
         'seller_id',
         'name',
         'price',
+        'brand',
         'description',
         'item_category_id',
         'image_url',
@@ -24,6 +26,11 @@ class Item extends Model
     public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    public function condition()
+    {
+        return $this->belongsTo(Condition::class, 'condition_id');
     }
 
     public function categories()

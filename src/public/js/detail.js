@@ -18,4 +18,32 @@ $(document).ready(function () {
             purchaseButton.show();   // 購入ボタンを表示
         }
     });
+
+    $('.star-icon').on('click', function () {
+        console.log('1');
+        const $this = $(this);
+        const itemId = $this.data('item-id'); // アイテム ID を取得
+
+        // Ajax リクエストを送信
+        $.ajax({
+            url: '/favorites/toggle', // ルートURL
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'), // CSRF トークン
+                item_id: itemId,
+            },
+            success: function (response) {
+                console.log('OK');
+                // お気に入り状態に応じて色を変更
+                if (response.is_favorite) {
+                    $this.find('polygon').attr('fill', 'yellow');
+                } else {
+                    $this.find('polygon').attr('fill', 'white');
+                }
+            },
+            error: function () {
+                alert('お気に入りの処理に失敗しました。');
+            }
+        });
+    });
 });

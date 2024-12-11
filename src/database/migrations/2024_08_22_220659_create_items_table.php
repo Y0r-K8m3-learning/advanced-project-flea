@@ -18,6 +18,7 @@ return new class extends Migration
                 'id'
             )->onDelete('cascade');
             $table->string('name');
+            $table->string('brand');
             $table->integer(
                 'price'
             );
@@ -27,6 +28,11 @@ return new class extends Migration
                 'item_category',
                 'id'
             )->onDelete('cascade');
+            $table->unsignedBigInteger('condition_id')->constrained(
+                'condtions',
+                'id'
+            )->onDelete('cascade');
+
             $table->string('image_url');
 
             $table->boolean('sales_flg')->default(false);
