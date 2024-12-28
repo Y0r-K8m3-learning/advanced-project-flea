@@ -34,6 +34,7 @@
                             <th>名前</th>
                             <th>メールアドレス</th>
                             <th>登録日</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,6 +44,12 @@
                             <td>{{ $owner->name }}</td>
                             <td>{{ $owner->email }}</td>
                             <td>{{ $owner->created_at->format('Y-m-d') }}</td>
+                            <td>
+                                <!-- コメント一覧へ飛ぶボタン -->
+                                <a href="{{ route('admin.comment', $owner->id) }}" class="btn btn-info btn-sm">
+                                    <i class="bi bi-chat-dots"></i> コメント一覧
+                                </a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

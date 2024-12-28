@@ -57,9 +57,6 @@
                                 <label for="total_price">合計金額</label>
                                 <input type="text" id="total_price" name="amount" class="form-control p-1" readonly>
                             </div>
-
-
-
                             @csrf
                             <div>テスト: 4242 4242 4242 4242</div>
                             <div>

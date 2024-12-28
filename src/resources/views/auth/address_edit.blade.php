@@ -41,7 +41,7 @@
 
             <!-- 更新ボタン -->
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary">住所を更新</button>
+                <button type="submit" class="btn btn-danger">更新する</button>
             </div>
         </form>
     </div>

@@ -46,8 +46,9 @@ Route::get('/payment/edit/{item_id}', [PurchaseController::class, 'edit'])->name
 
 Route::put('/payment/update', [PurchaseController::class, 'update'])->name('payment.update');
 
-// 購入ページ
 Route::get('/purchase/{item}', [PurchaseController::class, 'show'])->name('purchase.show');
+Route::post('/purchase/initiate', [PurchaseController::class, 'initiatePurchase'])->name('purchase.initiate');
+Route::post('/purchase/confirm', [PurchaseController::class, 'confirm'])->name('purchase.confirm');
 
 // 購入処理
 Route::post('/purchase/process', [PurchaseController::class, 'process'])->name('purchase.process');
