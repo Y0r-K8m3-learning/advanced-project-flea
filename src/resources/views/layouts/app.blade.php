@@ -33,11 +33,12 @@
     <!-- Header (固定) -->
     <div class="header" style="position: fixed; top: 0; width: 100%; z-index: 1000; background-color: black; color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px;">
         <div>
+            <a href="{{ route('home') }}">
+                <span class="material-symbols-outlined">
+                    <img src="{{ asset('icons/logo.svg') }}" alt="Log Icon" style="height: 24px;;">
 
-            <span class="material-symbols-outlined">
-                <img src="{{ asset('icons/logo.svg') }}" alt="Log Icon" style="height: 24px;;"> <!-- アイコンを追加 -->
-
-            </span>
+                </span>
+            </a>
         </div>
         @if (!in_array(request()->route()->getName(), ['login', 'register']))
         <div class="w-50">

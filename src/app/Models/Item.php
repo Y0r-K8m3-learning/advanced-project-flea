@@ -18,7 +18,6 @@ class Item extends Model
         'price',
         'brand',
         'description',
-        'item_category_id',
         'image_url',
         'sales_flg',
     ];

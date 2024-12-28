@@ -3,9 +3,12 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Item;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
-class ItemTest extends TestCase
+class ItemDetailTest extends TestCase
 {
 
     /**

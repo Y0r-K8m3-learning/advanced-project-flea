@@ -9,6 +9,7 @@ use App\Models\Favorite;
 use App\Models\Category;
 use App\Models\Condition;
 use App\Models\ItemCategory;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -131,11 +132,17 @@ class ItemController extends Controller
             'price' => 'required|integer|min:0',
         ]);
 
-        $imagePath = $request->file('image')->store('items', 'public');
-        $itemCategoryIds = [];
+
+        // 画像の保存
+        if ($request->hasFile('image')) {
+            // 画像をストレージの 'public/images' に保存
+            $path = $request->file('image')->store('images', 'public');
+
+            $validated['image_url'] = Storage::url($path);
+        }
 
         $item = Item::insertGetId([
-            'image_url' => $imagePath,
+            'image_url' => $validated['image_url'],
             'condition_id' => $validated['condition'],
             'brand' => $validated['brand'],
             'seller_id' => auth()->id(),
@@ -145,6 +152,9 @@ class ItemController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+
+
         foreach ($validated['categories'] as $target) {
 
             // item_category テーブルに登録

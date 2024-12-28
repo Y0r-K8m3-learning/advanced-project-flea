@@ -1,3 +1,10 @@
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/item_create.css') }}">
+@endsection
+@section('js')
+<script src="{{ asset('js/item_create.js') }}"></script>
+@endsection
+
 <x-app-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -15,9 +22,11 @@
             <!-- 商品画像 -->
             <div class="mb-4">
                 <label for="product-image" class="form-label d-block">商品画像</label>
-                <div class="image-upload-box border border-secondary rounded d-flex align-items-center justify-content-center" style="height: 200px; width: 100%; cursor: pointer;">
-                    <input type="file" name="image" id="product-image" class="form-control d-none">
+                <div class="image-upload-box border border-secondary rounded d-flex align-items-center justify-content-center position-relative" style="height: 200px; width: 100%; cursor: pointer;">
+                    <input type="file" name="image" id="product-image" class="form-control d-none" accept="image/*">
                     <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('product-image').click()">画像を選択</button>
+                    <!-- 画像プレビュー用のimgタグを追加 -->
+                    <img id="image-preview" src="#" alt="画像プレビュー" class="img-fluid position-absolute top-0 left-0 w-100 h-100" style="object-fit: contain; display: none;">
                 </div>
                 @error('image')
                 <div class="invalid-feedback d-block">{{ $message }}</div>

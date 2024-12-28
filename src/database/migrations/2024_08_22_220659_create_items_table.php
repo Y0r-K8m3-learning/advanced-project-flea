@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('items');
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('seller_id')->constrained(
@@ -24,10 +25,6 @@ return new class extends Migration
             );
             $table->string('description');
 
-            $table->unsignedBigInteger('item_category_id')->constrained(
-                'item_category',
-                'id'
-            )->onDelete('cascade');
             $table->unsignedBigInteger('condition_id')->constrained(
                 'condtions',
                 'id'
