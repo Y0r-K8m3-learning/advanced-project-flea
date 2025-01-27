@@ -1,0 +1,167 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    border: none;
+}
+.left-half {
+    flex: 1;
+}
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+   .icon-container {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* アイコン間の間隔 */
+        }
+
+        .star-icon {
+            width:25px;
+            height: 25px;
+            cursor: pointer; /* クリック可能に見せる */
+            transition: transform 0.3s ease; /* ホバー時のアニメーション */
+        }
+
+        .star-icon:hover {
+            transform: scale(1.1); /* ホバー時に拡大 */
+        }
+
+        .comment-icon {
+            font-size: 48px;
+            color: black;
+            cursor: pointer;
+        }
+.left-half img{
+    width: 300px;
+    height: 200px;
+    border: 1px solid #ddd;
+}
+.right-half {
+    flex: 1;
+    background-color: #f8f9fa;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 35em;
+}
+
+.reserve-content{
+     background-color: rgba(173, 216, 230, 0.5);
+}
+
+ .back-link {
+            display: inline-block;
+            font-size: 24px;
+            background-color: transparent;
+            border: solid;
+            text-decoration: none;
+            color:black;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
+
+        .back-button {
+    font-size: 1rem; /* ボタンの文字サイズを調整 */
+    padding: 2px 8px; /* ボタン内側の余白を小さくして領域を縮小 */
+    box-shadow: 0.5px 0.5px;
+    border-radius: 30%;
+
+}
+.under-right-content {
+    display: flex;
+    justify-content: flex-end;
+    height: 50px;
+}
+
+  .comment-section {
+        display: none; /* 初期状態は非表示 */
+        position: relative;
+        width: 100%;
+        max-height: 400px;
+        border: 1px solid black;
+        padding: 10px;
+        overflow-y: auto; /* スクロールバーを表示 */
+        background-color: #f9f9f9;
+        margin-top: 20px;
+    }
+   .user-comment {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.own-comment{
+    display: inline;
+    margin-left:auto;
+    margin-right: 0;
+    
+    color:red;
+}
+.user-comment .comment-header {
+    display: flex;
+    align-items: center;
+}
+
+.user-comment .own-comment .comment-header {
+    justify-content: flex-end; /* 右寄せ */
+}
+
+.user-comment .user-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.user-icon {
+    width: 40px; /* アイコンの幅 */
+    height: 40px; /* アイコンの高さ */
+    border-radius: 50%; /* 丸型にする */
+    object-fit: cover; /* アスペクト比を維持 */
+    border: 1px solid #ddd; /* 輪郭を追加（オプション） */
+}
+
+.user-comment .user-name {
+    font-weight: bold;
+}
+
+.user-comment .comment-content {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.user-comment .own-comment .comment-content {
+   
+}
+.comment-input {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.comment-input textarea {
+    width: 100%;
+    height: 80px;
+    resize: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.comment-input button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.comment-input button:hover {
+    background-color: #0056b3;
+}
