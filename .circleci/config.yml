@@ -22,16 +22,18 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "MsPPWyBDcZgWZqYnPlJ6KdDKHUR6JKa2kkE3sv9ibI8"  # CircleCIに追加したSSHキーのフィンガープリント
       - run:
-          name: Install AWS CLI
+          name: Deploy to EC2
           command: |
-            sudo apt-get update
-            sudo apt-get install -y python3-pip
-            pip3 install awscli --upgrade
-      - run:
-          name: Deploy to AWS
-          command: |
-            ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-112-128-33.ap-northeast-1.compute.amazonaws.com "cd /path/to/app && git pull && npm install && pm2 restart all"
+            ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+              cd /path/to/your/application
+              git pull origin main
+              npm install
+              pm2 restart all
+            EOF
 
 workflows:
   version: 2
