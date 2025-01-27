@@ -19,7 +19,7 @@ jobs:
               if [ ! -f /home/ec2-user/.deployed ]; then
                 echo "First deployment: Performing full setup."
                 cd /home/ec2-user
-                git clone https://github.com/Y0r-K8m3-learning/advanced-project-rese.git .
+                git clone https://github.com/Y0r-K8m3-learning/advanced-project-flea.git
                 docker-compose up -d --build
                 docker-compose exec php bash -c "composer install"
                 docker-compose exec php bash -c "cp -p .env.example .env"
