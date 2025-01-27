@@ -1,49 +1,91 @@
 version: 2.1
 
 jobs:
-  build:
-    docker:
-      - image: cimg/base:stable
+  build_and_deploy:
+    machine: true  # Dockerをフルにサポートするためにmachine executorを使用
     steps:
       - checkout
-      - run:
-          name: Install Dependencies
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y nodejs npm
-            npm install
-      - run:
-          name: Run Tests
-          command: |
-            npm test
 
-  deploy:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "MsPPWyBDcZgWZqYnPlJ6KdDKHUR6JKa2kkE3sv9ibI8"  # CircleCIに追加したSSHキーのフィンガープリント
       - run:
-          name: Deploy to EC2
+          name: Install Docker Compose
+          command: |
+            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+      - run:
+          name: Build and Start Docker Containers
+          command: |
+            docker-compose up -d --build
+
+      - run:
+          name: Install Composer Dependencies
+          command: |
+            docker-compose exec php bash -c "composer install"
+
+      - run:
+          name: Setup Environment
+          command: |
+            docker-compose exec php bash -c "cp -p .env.example .env"
+
+      - run:
+          name: Generate Application Key
+          command: |
+            docker-compose exec php bash -c "php artisan key:generate"
+
+      - run:
+          name: Run Migrations
+          command: |
+            docker-compose exec php bash -c "php artisan migrate"
+
+      - run:
+          name: Run Seeders
+          command: |
+            docker-compose exec php bash -c "php artisan db:seed"
+
+      - run:
+          name: Install NPM Dependencies
+          command: |
+            docker-compose exec php bash -c "npm install"
+
+      - run:
+          name: Build Assets
+          command: |
+            docker-compose exec php bash -c "npm run build"
+
+      - run:
+          name: Deploy to EC2 via SSH
           command: |
             ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \<< 'EOF'
-              cd /home/ec2-user
-              git pull origin main
-              npm install
-              pm2 restart all
+              if [ ! -f /path/to/your/application/.deployed ]; then
+                echo "First deployment: Performing full setup."
+                cd /home/ec2-user
+                git clone https://github.com/Y0r-K8m3-learning/advanced-project-rese.git .
+                docker-compose up -d --build
+                docker-compose exec php bash -c "composer install"
+                docker-compose exec php bash -c "cp -p .env.example .env"
+                docker-compose exec php bash -c "php artisan key:generate"
+                docker-compose exec php bash -c "php artisan migrate"
+                docker-compose exec php bash -c "php artisan db:seed"
+                docker-compose exec php bash -c "npm install"
+                docker-compose exec php bash -c "npm run build"
+                pm2 restart all
+                touch /home/ec2-user/.deployed
+              else
+                echo "Subsequent deployment: Pulling latest changes and updating."
+                cd /home/ec2-user
+                git pull origin main
+                docker-compose up -d --build
+                docker-compose exec php bash -c "composer install"
+                docker-compose exec php bash -c "php artisan migrate"
+                docker-compose exec php bash -c "php artisan db:seed"
+                docker-compose exec php bash -c "npm install"
+                docker-compose exec php bash -c "npm run build"
+                pm2 restart all
+              fi
             EOF
 
 workflows:
-  version: 2
   build_and_deploy:
     jobs:
-      - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
+      - build_and_deploy
 
