@@ -15,10 +15,15 @@ jobs:
       - run:
           name: Deploy to EC2 via SSH
           command: |
-            ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \<< 'EOF'
+            ssh -t -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \<< 'EOF'
               if [ ! -f /home/ec2-user/.deployed ]; then
                 echo "First deployment: Performing full setup."
-                cd /home/ec2-user
+                   # デプロイ先ディレクトリが存在しない場合は作成
+              if [ ! -d  /home/ec2-user/app ]; then
+                echo "Creating deploy directory at Deploy"
+                mkdir -p  /home/ec2-user/app
+              fi
+                cd /home/ec2-user/app
                 git clone https://github.com/Y0r-K8m3-learning/advanced-project-flea.git .
                 docker-compose up -d --build
                 docker-compose exec php bash -c "composer install"
@@ -29,10 +34,10 @@ jobs:
                 docker-compose exec php bash -c "npm install"
                 docker-compose exec php bash -c "npm run build"
                 pm2 restart all
-                touch /home/ec2-user/.deployed
+                touch /home/ec2-user/app/.deployed
               else
                 echo "Subsequent deployment: Pulling latest changes and updating."
-                cd /home/ec2-user
+                cd /home/ec2-user/app
                 git pull origin main
                 docker-compose up -d --build
                 docker-compose exec php bash -c "composer install"
