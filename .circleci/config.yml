@@ -15,31 +15,111 @@ jobs:
       - run:
           name: Deploy to EC2 via SSH
           command: |
-            ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \<< 'EOF'
+            ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+              # 初回デプロイかどうかを確認
               if [ ! -f /home/ec2-user/.deployed ]; then
                 echo "First deployment: Performing full setup."
+
+                # デプロイ先ディレクトリに移動
                 cd /home/ec2-user
+
+                # リポジトリをカレントディレクトリにクローン
                 git clone https://github.com/Y0r-K8m3-learning/advanced-project-flea.git .
+
+                # Docker コンテナをビルドして起動
                 docker-compose up -d --build
+
+                # Composer 依存関係をインストール
                 docker-compose exec php bash -c "composer install"
-                docker-compose exec php bash -c "cp -p .env.example .env"
+
+                # .env ファイルをコピー（存在しない場合のみ）
+                docker-compose exec php bash -c 'if [ ! -f .env ]; then cp -p .env.example .env; fi'
+
+                # .env ファイルのデータベース設定を修正
+                docker-compose exec php bash -c "sed -i 's/DB_CONNECTION=sqlite/DB_CONNECTION=mysql/' .env"
+                docker-compose exec php bash -c "sed -i 's/DB_HOST=127.0.0.1/DB_HOST=mysql/' .env"
+                docker-compose exec php bash -c "sed -i 's/DB_DATABASE=homestead/DB_DATABASE=laravel_db/' .env"
+                docker-compose exec php bash -c "sed -i 's/DB_USERNAME=homestead/DB_USERNAME=your_username/' .env"
+                docker-compose exec php bash -c "sed -i 's/DB_PASSWORD=secret/DB_PASSWORD=your_password/' .env"
+
+                # Laravel アプリケーションキーを生成
                 docker-compose exec php bash -c "php artisan key:generate"
-                docker-compose exec php bash -c "php artisan migrate"
-                docker-compose exec php bash -c "php artisan db:seed"
+
+                # PM2 のインストール（未インストールの場合）
+                if ! command -v pm2 &> /dev/null; then
+                  echo "PM2 not found. Installing PM2..."
+                  curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
+                  sudo yum install -y nodejs
+                  sudo npm install -g pm2
+                else
+                  echo "PM2 is already installed."
+                fi
+
+                # MySQL が起動するまで待機（最大60秒）
+                COUNTER=0
+                MAX=10
+                while ! nc -z mysql 3306; do
+                  echo "Waiting for MySQL... ($COUNTER/$MAX)"
+                  sleep 2
+                  COUNTER=$((COUNTER+1))
+                  if [ $COUNTER -ge $MAX ]; then
+                    echo "MySQL did not start within expected time."
+                    exit 1
+                  fi
+                done
+                echo "MySQL is up!"
+
+                # データベースマイグレーションとシーディングを実行（非対話式）
+                docker-compose exec php bash -c "php artisan migrate --force"
+                docker-compose exec php bash -c "php artisan db:seed --force"
+
+                # NPM 依存関係をインストールしてビルド
                 docker-compose exec php bash -c "npm install"
                 docker-compose exec php bash -c "npm run build"
+
+                # アプリケーションを PM2 で再起動
                 pm2 restart all
+
+                # デプロイ完了フラグを作成
                 touch /home/ec2-user/.deployed
               else
                 echo "Subsequent deployment: Pulling latest changes and updating."
+
+                # デプロイ先ディレクトリに移動
                 cd /home/ec2-user
+
+                # 最新の変更をプル
                 git pull origin main
+
+                # Docker コンテナを再ビルドして起動
                 docker-compose up -d --build
+
+                # Composer 依存関係をインストール
                 docker-compose exec php bash -c "composer install"
-                docker-compose exec php bash -c "php artisan migrate"
-                docker-compose exec php bash -c "php artisan db:seed"
+
+                # MySQL が起動するまで待機（最大60秒）
+                COUNTER=0
+                MAX=20
+                while ! nc -z mysql 3306; do
+                  echo "Waiting for MySQL... ($COUNTER/$MAX)"
+                  sleep 3
+                  COUNTER=$((COUNTER+1))
+                  if [ $COUNTER -ge $MAX ]; then
+                    echo "MySQL did not start within expected time."
+                    exit 1
+                  fi
+                done
+                echo "MySQL is up!"
+
+                # データベースマイグレーションとシーディングを実行（非対話式）
+                docker-compose exec php bash -c "php artisan migrate --force"
+                docker-compose exec php bash -c "php artisan db:seed --force"
+
+                # NPM 依存関係をインストールしてビルド
                 docker-compose exec php bash -c "npm install"
                 docker-compose exec php bash -c "npm run build"
+
+                # アプリケーションを PM2 で再起動
                 pm2 restart all
               fi
             EOF
