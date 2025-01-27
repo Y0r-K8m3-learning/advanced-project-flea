@@ -13,50 +13,10 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
 
       - run:
-          name: Build and Start Docker Containers
-          command: |
-            docker-compose up -d --build
-
-      - run:
-          name: Install Composer Dependencies
-          command: |
-            docker-compose exec php bash -c "composer install"
-
-      - run:
-          name: Setup Environment
-          command: |
-            docker-compose exec php bash -c "cp -p .env.example .env"
-
-      - run:
-          name: Generate Application Key
-          command: |
-            docker-compose exec php bash -c "php artisan key:generate"
-
-      - run:
-          name: Run Migrations
-          command: |
-            docker-compose exec php bash -c "php artisan migrate"
-
-      - run:
-          name: Run Seeders
-          command: |
-            docker-compose exec php bash -c "php artisan db:seed"
-
-      - run:
-          name: Install NPM Dependencies
-          command: |
-            docker-compose exec php bash -c "npm install"
-
-      - run:
-          name: Build Assets
-          command: |
-            docker-compose exec php bash -c "npm run build"
-
-      - run:
           name: Deploy to EC2 via SSH
           command: |
             ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \<< 'EOF'
-              if [ ! -f /path/to/your/application/.deployed ]; then
+              if [ ! -f /home/ec2-user/.deployed ]; then
                 echo "First deployment: Performing full setup."
                 cd /home/ec2-user
                 git clone https://github.com/Y0r-K8m3-learning/advanced-project-rese.git .
