@@ -80,14 +80,14 @@ jobs:
                 git pull origin main || { echo "Git pull failed"; exit 1; }
 
                 # Docker コンテナを再ビルドして起動
-                docker-compose up -d --build || { echo "Docker Compose failed"; exit 1; }
+                sudo docker-compose up -d --build || { echo "Docker Compose failed"; exit 1; }
 
                 # Composer 依存関係をインストール
-                docker-compose exec php bash -c "composer install" || { echo "Composer install failed"; exit 1; }
+                sudo docker-compose exec php bash -c "composer install" || { echo "Composer install failed"; exit 1; }
 
                 # データベースマイグレーションとシーディングを実行
-                docker-compose exec php bash -c "php artisan migrate --force" || { echo "Migration failed"; exit 1; }
-                docker-compose exec php bash -c "php artisan db:seed --force" || { echo "Seeding failed"; exit 1; }
+                sudo docker-compose exec php bash -c "php artisan migrate --force" || { echo "Migration failed"; exit 1; }
+                sudo docker-compose exec php bash -c "php artisan db:seed --force" || { echo "Seeding failed"; exit 1; }
 
                 # NPM依存関係をインストールしてビルド
                 docker-compose exec php bash -c "npm install" || { echo "NPM install failed"; exit 1; }
