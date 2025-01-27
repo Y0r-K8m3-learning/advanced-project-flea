@@ -24,7 +24,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "your:ssh:key:2048 SHA256:MsPPWyBDcZgWZqYnPlJ6KdDKHUR6JKa2kkE3sv9ibI8 no comment (RSA)"  # CircleCIに追加したSSHキーのフィンガープリント
+            - "MsPPWyBDcZgWZqYnPlJ6KdDKHUR6JKa2kkE3sv9ibI8"  # CircleCIに追加したSSHキーのフィンガープリント
       - run:
           name: Deploy to EC2
           command: |
