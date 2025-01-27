@@ -29,7 +29,7 @@ jobs:
           name: Deploy to EC2
           command: |
             ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-              cd /path/to/your/application
+              cd /home/ec2-user
               git pull origin main
               npm install
               pm2 restart all
