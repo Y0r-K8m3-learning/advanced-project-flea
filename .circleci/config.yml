@@ -21,31 +21,31 @@ jobs:
                    # デプロイ先ディレクトリが存在しない場合は作成
               if [ ! -d  /home/ec2-user/app ]; then
                 echo "Creating deploy directory at Deploy"
-                mkdir -p  /home/ec2-user/app
+                sudo mkdir -p  /home/ec2-user/app
               fi
                 cd /home/ec2-user/app
                 git clone https://github.com/Y0r-K8m3-learning/advanced-project-flea.git .
-                docker-compose up -d --build
-                docker-compose exec php bash -c "composer install"
-                docker-compose exec php bash -c "cp -p .env.example .env"
-                docker-compose exec php bash -c "php artisan key:generate"
-                docker-compose exec php bash -c "php artisan migrate"
-                docker-compose exec php bash -c "php artisan db:seed"
-                docker-compose exec php bash -c "npm install"
-                docker-compose exec php bash -c "npm run build"
-                pm2 restart all
-                touch /home/ec2-user/app/.deployed
+                sudo docker-compose up -d --build
+                sudo docker-compose exec php bash -c "composer install"
+                sudo docker-compose exec php bash -c "cp -p .env.example .env"
+                sudo docker-compose exec php bash -c "php artisan key:generate"
+                sudo docker-compose exec php bash -c "php artisan migrate"
+                sudo docker-compose exec php bash -c "php artisan db:seed"
+                sudo docker-compose exec php bash -c "npm install"
+                sudo docker-compose exec php bash -c "npm run build"
+                sudo pm2 restart all
+                sudo touch /home/ec2-user/app/.deployed
               else
                 echo "Subsequent deployment: Pulling latest changes and updating."
                 cd /home/ec2-user/app
                 git pull origin main
-                docker-compose up -d --build
-                docker-compose exec php bash -c "composer install"
-                docker-compose exec php bash -c "php artisan migrate"
-                docker-compose exec php bash -c "php artisan db:seed"
-                docker-compose exec php bash -c "npm install"
-                docker-compose exec php bash -c "npm run build"
-                pm2 restart all
+                sudo docker-compose up -d --build
+                sudo docker-compose exec php bash -c "composer install"
+                sudo docker-compose exec php bash -c "php artisan migrate"
+                sudo docker-compose exec php bash -c "php artisan db:seed"
+                sudo docker-compose exec php bash -c "npm install"
+                sudo docker-compose exec php bash -c "npm run build"
+                sudo pm2 restart all
               fi
             EOF
 
