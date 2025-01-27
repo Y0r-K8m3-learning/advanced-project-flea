@@ -19,10 +19,10 @@ jobs:
               if [ ! -f /home/ec2-user/.deployed ]; then
                 echo "First deployment: Performing full setup."
                    # デプロイ先ディレクトリが存在しない場合は作成
-              if [ ! -d  /home/ec2-user/app ]; then
-                echo "Creating deploy directory at Deploy"
-                sudo mkdir -p  /home/ec2-user/app
-              fi
+                if [ ! -d  /home/ec2-user/app ]; then
+                  echo "Creating deploy directory at Deploy"
+                  sudo mkdir -p  /home/ec2-user/app
+                fi
                 cd /home/ec2-user/app
                 git clone https://github.com/Y0r-K8m3-learning/advanced-project-flea.git .
                 sudo docker-compose up -d --build
