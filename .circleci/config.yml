@@ -50,6 +50,24 @@ jobs:
                 # Laravel アプリケーションキーを生成
                 docker-compose exec php bash -c "php artisan key:generate" || { echo "Laravel key generation failed"; exit 1; }
 
+                # MySQLコンテナを再起動
+                docker-compose restart mysql || { echo "MySQL restart failed"; exit 1; }
+
+                # MySQLが起動するまで待機（最大10秒）
+                echo "Waiting for MySQL to be ready..."
+                for i in {1..10}; do
+                  docker-compose exec mysql mysqladmin ping -h "localhost" --silent && break
+                  echo "MySQL is not ready yet. Waiting..."
+                  sleep 1
+                done
+
+                if [ $i -eq 10 ]; then
+                  echo "MySQL did not become ready within 10 seconds."
+                  exit 1
+                fi
+
+                echo "MySQL is ready."
+
                 # データベースマイグレーションとシーディングを実行
                 docker-compose exec php bash -c "php artisan migrate --force" || { echo "Migration failed"; exit 1; }
                 docker-compose exec php bash -c "php artisan db:seed --force" || { echo "Seeding failed"; exit 1; }
@@ -85,6 +103,24 @@ jobs:
                 echo "####docker-build."
                 # Composer 依存関係をインストール
                 sudo docker-compose exec php bash -c "composer install" || { echo "Composer install failed"; exit 1; }
+
+                # MySQLコンテナを再起動
+                docker-compose restart mysql || { echo "MySQL restart failed"; exit 1; }
+
+                # MySQLが起動するまで待機（最大10秒）
+                echo "Waiting for MySQL to be ready..."
+                for i in {1..10}; do
+                  docker-compose exec mysql mysqladmin ping -h "localhost" --silent && break
+                  echo "MySQL is not ready yet. Waiting..."
+                  sleep 1
+                done
+
+                if [ $i -eq 10 ]; then
+                  echo "MySQL did not become ready within 10 seconds."
+                  exit 1
+                fi
+
+                echo "MySQL is ready."
 
                 # データベースマイグレーションとシーディングを実行
                 sudo docker-compose exec php bash -c "php artisan migrate --force" || { echo "Migration failed"; exit 1; }
