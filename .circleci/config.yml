@@ -46,7 +46,7 @@ jobs:
                 sudo chmod 777 -R *
 
                 # Composer 依存関係をインストール
-                sudo docker-compose exec php bash -c "composer install" || { echo "Composer install failed"; exit 1; }
+                sudo docker-compose exec -w /var/www/app php bash -c "composer install" || { echo "Composer install failed"; exit 1; }
 
                 # .env ファイルをコピー（存在しない場合のみ）
                 docker-compose exec php bash -c 'if [ ! -f .env ]; then cp -p .env.example .env; fi' || { echo ".env copy failed"; exit 1; }
@@ -156,4 +156,5 @@ workflows:
   build_and_deploy:
     jobs:
       - build_and_deploy
+
 

@@ -13,7 +13,7 @@ services:
     build: ./docker/php
     volumes:
       - ./src:/var/www/app
-    working_dir: /var/www
+    working_dir: /var/www/app
 
   mysql:
     image: mysql:8.0.37
