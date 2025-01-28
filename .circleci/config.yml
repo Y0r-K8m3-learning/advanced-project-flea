@@ -49,18 +49,18 @@ jobs:
                 sudo docker-compose exec -w /var/www/app php bash -c "composer install" || { echo "Composer install failed"; exit 1; }
 
                 # .env ファイルをコピー（存在しない場合のみ）
-                docker-compose exec php bash -c 'if [ ! -f .env ]; then cp -p .env.example .env; fi' || { echo ".env copy failed"; exit 1; }
+                sudo docker-compose exec php bash -c 'if [ ! -f .env ]; then cp -p .env.example .env; fi' || { echo ".env copy failed"; exit 1; }
 
                 # Laravel アプリケーションキーを生成
-                docker-compose exec php bash -c "php artisan key:generate" || { echo "Laravel key generation failed"; exit 1; }
+                sudo docker-compose exec php bash -c "php artisan key:generate" || { echo "Laravel key generation failed"; exit 1; }
 
                 # MySQLコンテナを再起動
-                docker-compose restart mysql || { echo "MySQL restart failed"; exit 1; }
+                sudo docker-compose restart mysql || { echo "MySQL restart failed"; exit 1; }
 
                 # MySQLが起動するまで待機（最大10秒）
                 echo "Waiting for MySQL to be ready..."
                 for i in {1..10}; do
-                  docker-compose exec mysql mysqladmin ping -h "localhost" --silent && break
+                  sudo docker-compose exec mysql mysqladmin ping -h "localhost" --silent && break
                   echo "MySQL is not ready yet. Waiting..."
                   sleep 1
                 done
@@ -73,12 +73,12 @@ jobs:
                 echo "MySQL is ready."
 
                 # データベースマイグレーションとシーディングを実行
-                docker-compose exec php bash -c "php artisan migrate --force" || { echo "Migration failed"; exit 1; }
-                docker-compose exec php bash -c "php artisan db:seed --force" || { echo "Seeding failed"; exit 1; }
+                sudo docker-compose exec php bash -c "php artisan migrate --force" || { echo "Migration failed"; exit 1; }
+                sudo docker-compose exec php bash -c "php artisan db:seed --force" || { echo "Seeding failed"; exit 1; }
 
                 # NPM依存関係をインストールしてビルド
-                docker-compose exec php bash -c "npm install" || { echo "NPM install failed"; exit 1; }
-                docker-compose exec php bash -c "npm run build" || { echo "NPM build failed"; exit 1; }
+                sudo docker-compose exec php bash -c "npm install" || { echo "NPM install failed"; exit 1; }
+                sudo docker-compose exec php bash -c "npm run build" || { echo "NPM build failed"; exit 1; }
 
                 # PM2 のインストール（未インストールの場合）
                 if ! command -v pm2 &> /dev/null; then
