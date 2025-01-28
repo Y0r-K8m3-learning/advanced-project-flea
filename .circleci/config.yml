@@ -16,7 +16,7 @@ jobs:
           name: Deploy to EC2 via SSH
           command: |
             ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \<< 'EOF'
-              DEPLOY_DIR=/home/ec2-user/app
+              DEPLOY_DIR=/home/ec2-user/test
 
               # デプロイ先ディレクトリが存在しない場合は作成
               if [ ! -d "$DEPLOY_DIR" ]; then
