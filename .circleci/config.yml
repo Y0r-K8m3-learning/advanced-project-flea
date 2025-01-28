@@ -36,6 +36,7 @@ jobs:
                 rm -rf $DEPLOY_DIR/* /home/ec2-user/app/.[!.]*
 
                 # リポジトリをカレントディレクトリにクローン
+                
                 git clone https://github.com/Y0r-K8m3-learning/advanced-project-flea.git .
                 
                 sudo chmod 777 -R *
@@ -99,6 +100,7 @@ jobs:
                 echo "Subsequent deployment: Pulling latest changes and updating."
 
                 # 最新の変更をプル
+                git checkout main
                 git pull origin main || { echo "Git pull failed"; exit 1; }
 
                 # Docker コンテナを再ビルドして起動
