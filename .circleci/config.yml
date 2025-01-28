@@ -96,7 +96,20 @@ jobs:
 
                 # アプリケーションを PM2 で再起動
                 pm2 restart all || { echo "PM2 restart failed"; exit 1; }
+
+
+
               fi
+
+                            # === PHP Unit テストの開始 ===
+              echo "PHP Unit テストを実行中..."
+
+              # PHPコンテナ内でPHPUnitテストを実行
+              docker-compose exec php bash -c "vendor/bin/phpunit" || { echo "PHP Unit テストに失敗しました"; exit 1; }
+
+              echo "PHP Unit テストが正常に完了しました。"
+              # === PHP Unit テストの終了 ===
+
             EOF
 
 workflows:
