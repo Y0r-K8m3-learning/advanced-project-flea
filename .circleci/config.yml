@@ -96,6 +96,8 @@ jobs:
                 else
                   echo "PM2 is already installed."
                 fi
+               
+                sudo chmod 777 -R *
 
                 # デプロイ完了フラグを作成
                 touch .deployed
