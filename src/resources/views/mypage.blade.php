@@ -13,10 +13,10 @@
     <!-- ユーザ情報 -->
     <div class="d-flex align-items-center mt-5 w-100">
         <img src="{{ $userDetail && $userDetail->image_id ? Storage::url($userDetail->image_id) : asset('images/default_icon.png') }}" class="rounded-circle border bg-orange me-3" alt="ユーザアイコン" width="100" height="100">
-        <div class="d-flex align-items-center  w-100">
-            <span class=" d-block">{{ $user->name }}</span>
+        <div class="d-flex align-items-center w-100">
+            <span class="d-block">{{ $user->name }}</span>
             <!-- プロフィール編集ボタン -->
-            <a href="{{ route('profile.edit') }}" class="ms-5 btn btn-outline-danger custom-edit-button mt-2">プロフィールを編集</a>
+            <a href="{{ route('profile.edit') }}" class="ms-auto btn btn-outline-danger custom-edit-button mt-2">プロフィールを編集</a>
         </div>
     </div>
 
