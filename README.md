@@ -1,4 +1,4 @@
-# beginner-project-flea(上級模擬案件２
+# beginner-project-flea(上級模擬案件２)
 
 # アプリケーションの説明
  - フリマアプリ
@@ -136,5 +136,19 @@ STRIPE_PUBLIC_KEY=
 STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
 ```
+
+3. unitテスト
+   - 環境構築後、以下のコマンドでUnit Testが実行できます。
+     1. `docker-compose exec php bash`
+     2. `vendor/phpunit/phpunit/phpunit`
+
+3. 自動デプロイについて
+　 - 本リポジトリの自動デプロイ設定(circle/config.yml)は開発者専用のものです。
+   - github/CircleCI/AWSの連携が必要です
+      - CircleCI上で対象のgithubリポジトリを連携させてください
+      - CircleCi上にAWSのsshキーを設定してください。
+　　- .circle/config.ymlを必要に応じて編集してください。
+
+
  
 
