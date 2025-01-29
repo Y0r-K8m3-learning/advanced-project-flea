@@ -2,8 +2,7 @@
 
 # アプリケーションの説明
  - フリマアプリ
-![image](![image](https://github.com/user-attachments/assets/c4d4893e-cead-4dd9-9518-b85672ac5546)
-)
+![image](https://github.com/user-attachments/assets/c4d4893e-cead-4dd9-9518-b85672ac5546)
 
 
 ## 作成した目的
@@ -148,6 +147,10 @@ STRIPE_WEBHOOK_SECRET=
       - CircleCI上で対象のgithubリポジトリを連携させてください
       - CircleCi上にAWSのsshキーを設定してください。
 　　- .circle/config.ymlを必要に応じて編集してください。
+　　- githubへpush後自動デプロイされます。
+    ### デプロイ結果はCircleCI上で確認できます
+　　　![デプロイ](https://github.com/user-attachments/assets/43b3247b-2333-400f-a95a-5fa384bc1c95)
+
 
 
  
