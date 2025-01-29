@@ -51,7 +51,7 @@
 
                     <div class="comment-section" id="comment-section">
                         @forelse ($comments as $comment)
-                        <div class="user-comment {{ $comment->user->id == auth()->id() ? 'own-comment' : '' }}">
+                        <div class="user-comment {{ $comment->user->id == Auth::user()->id ? 'own-comment' : '' }}">
                             <div style="display: flex; align-items: center;">
                                 <img src="{{ $comment->user->profile_image_url ?? 'https://via.placeholder.com/40' }}" alt="User Icon">
                                 <span class="user-name">{{ $comment->user->name }}</span>

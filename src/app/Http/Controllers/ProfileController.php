@@ -27,53 +27,60 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $user = auth()->user();
+        $user = Auth::user();
         $userDetail = $user->userDetail;
 
-
-        // アイコンのアップロード処理
-        if ($request->hasFile('icon')) {
-            // 既存のアイコンがあれば削除
-            if ($userDetail && $userDetail->image_id) {
-                Storage::delete($userDetail->image_id);
-            }
-
-            $path = $request->file('icon')->store('public/icons');
-            $validated['image_id'] = $path;
-        }
+        // バリデーション済みデータの取得
+        $validatedData = $request->validated();
 
         // ユーザー名の更新
-        $user->username = $validated['username'];
+        $user->name = $validatedData['username'];
         $user->save();
 
-        // ユーザー詳細の更新または作成
-        if ($userDetail) {
-            $userDetail->post_code = $validated['post_code'];
-            $userDetail->address = $validated['address'];
-            $userDetail->building = $validated['building'];
-            if (isset($validated['image_id'])) {
-                $userDetail->image_id = $validated['image_id'];
+        // アイコンの処理
+        if ($request->hasFile('icon')) {
+            // 既存の画像がある場合は削除
+            if ($userDetail && $userDetail->image_id) {
+                Storage::disk('public')->delete($userDetail->image_id);
             }
-            $userDetail->save();
+
+            // 新しい画像を保存
+            $path = $request->file('icon')->store('images', 'public');
+
+            // UserDetailの更新または作成
+            if ($userDetail) {
+                $userDetail->image_id = $path;
+                $userDetail->post_code = $validatedData['post_code'];
+                $userDetail->address = $validatedData['address'];
+                $userDetail->building = $validatedData['building'];
+                $userDetail->save();
+            } else {
+                $user->userDetail()->create([
+                    'image_id' => $path,
+                    'post_code' => $validatedData['post_code'],
+                    'address' => $validatedData['address'],
+                    'building' => $validatedData['building'],
+                ]);
+            }
         } else {
-            UserDetail::create([
-                'user_id' => $user->id,
-                'post_code' => $validated['post_code'],
-                'address' => $validated['address'],
-                'building' => $validated['building'],
-                'image_id' => $validated['image_id'] ?? null,
-            ]);
+            // アイコンが更新されていない場合の処理
+            if ($userDetail) {
+                $userDetail->post_code = $validatedData['post_code'];
+                $userDetail->address = $validatedData['address'];
+                $userDetail->building = $validatedData['building'];
+                $userDetail->save();
+            } else {
+                $user->userDetail()->create([
+                    'post_code' => $validatedData['post_code'],
+                    'address' => $validatedData['address'],
+                    'building' => $validatedData['building'],
+                ]);
+            }
         }
 
-        return redirect()->route('mypage')->with('status', 'プロフィールが更新されました。');
+        return redirect()->route('profile.edit')->with('status', 'プロフィールが更新されました。');
     }
 
     /**

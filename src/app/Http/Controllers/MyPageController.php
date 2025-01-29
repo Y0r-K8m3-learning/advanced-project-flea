@@ -30,7 +30,7 @@ class MyPageController extends Controller
     public function address_index()
     {
         // ログインユーザーのID取得
-        $userId = auth()->id();
+        $userId =  Auth::user()->id;
 
         // user_detailテーブルからログインユーザーのデータを取得
         $userDetail = UserDetail::where('user_id', $userId)->first();
@@ -55,7 +55,7 @@ class MyPageController extends Controller
             'building' => 'nullable|string|max:255',
         ]);
 
-        $userId = auth()->id();
+        $userId = Auth::user()->id;
         $userDetail = UserDetail::where('user_id', $userId)->first();
 
         // user_detail レコードがない場合、新規作成

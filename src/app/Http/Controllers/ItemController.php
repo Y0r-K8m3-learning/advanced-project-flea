@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Condition;
 use App\Models\ItemCategory;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -45,7 +46,7 @@ class ItemController extends Controller
                 ]);
             }
 
-            $userId = auth()->id(); // ログインユーザーのIDを取得
+            $userId = Auth::user()->id; // ログインユーザーのIDを取得
             $items = Item::whereHas('favorites', function ($q) use ($userId) {
                 $q->where('user_id', $userId);
             })
@@ -78,10 +79,13 @@ class ItemController extends Controller
         if (!$item) {
             return redirect()->back()->with('error', '対象の商品が見つかりません。');
         }
+
         // レビューを保存
         $review = new Review();
         $review->item_id = $request->input('item_id');
-        $review->user_id = auth()->id(); // 現在ログイン中のユーザーIDを取得
+        $review->user_id
+            = Auth::user()->id;
+        // 現在ログイン中のユーザーIDを取得
         $review->comment = $request->input('comment');
         $review->save();
 
@@ -140,12 +144,11 @@ class ItemController extends Controller
 
             $validated['image_url'] = Storage::url($path);
         }
-
         $item = Item::insertGetId([
             'image_url' => $validated['image_url'],
             'condition_id' => $validated['condition'],
             'brand' => $validated['brand'],
-            'seller_id' => auth()->id(),
+            'seller_id' => Auth::user()->id,
             'name' => $validated['name'],
             'description' => $validated['description'],
             'price' => $validated['price'],

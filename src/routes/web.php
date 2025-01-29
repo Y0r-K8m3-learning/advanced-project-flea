@@ -40,6 +40,7 @@ Route::get('/checkout', [PurchaseController::class, 'index'])->name('checkout.in
 Route::post('/checkout/process', [PurchaseController::class, 'process'])->name('checkout.process');
 
 Route::get('/address/edit', [PurchaseController::class, 'edit'])->name('address.edit');
+
 Route::put('/address/update', [PurchaseController::class, 'update'])->name('address.update');
 
 Route::get('/payment/edit/{item_id}', [PurchaseController::class, 'edit'])->name('payment.edit');
@@ -68,20 +69,10 @@ Route::get('/address/edit', [MyPageController::class, 'address_index'])->name('a
 
 Route::get('/mypage/item', [MypageController::class, 'index'])->name('mypage');
 
-// 住所更新
-Route::put('/address/update', [MyPageController::class, 'address_update'])->name('address.update');
 
 // プロフィール編集ページ
 Route::get('/profile/edit', [MyPageController::class, 'profile'])->name('profile.edit');
 
-// プロフィール更新
-Route::put('/profile/update', [MyPageController::class, 'update'])->name('profile.update');
-
-// プロフィール更新
-Route::get('/address/update', [MyPageController::class, 'address_index'])->name('address.update');
-
-// 商品を保存
-Route::post('/items', [ItemController::class, 'store'])->name('item.store');
 
 Route::get('/item/detail/{id}', [ItemController::class, 'showDetail'])->name('items.detail');
 
@@ -98,8 +89,6 @@ Route::get('/reservation/complete', function () {
     return view('reservation_complete');
 });
 
-Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
-
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/admin/sendMailToAll', [MailController::class, 'sendMailToAll'])->name('admin.sendMailToAll');
@@ -107,13 +96,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/admin/sendMail', [MailController::class, 'sendMail'])->name('admin.sendMail');
 
-    Route::post('/payment/index', [StripePaymentsController::class, 'index'])->name('paymentindex');
-    Route::post('/payment', [StripePaymentsController::class, 'payment'])->name('payment.store');
 
     Route::post('/reservations/{id}/delete', [MyPageController::class, 'destroy'])->name('reservations.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // マイページ
@@ -121,8 +108,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // プロフィール編集
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    
+
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
     Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
 });
 
