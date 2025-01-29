@@ -90,8 +90,6 @@ Route::post('/item/detail/store', [ItemController::class, 'review_store'])->name
 Route::post('/favorites/toggle', [ItemController::class, 'favoriteToggle'])->name('favorites.toggle');
 
 
-
-
 Route::get('/register/complete', function () {
     return view('register_complete');
 })->name('register.complete');
@@ -112,38 +110,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/payment/index', [StripePaymentsController::class, 'index'])->name('paymentindex');
     Route::post('/payment', [StripePaymentsController::class, 'payment'])->name('payment.store');
 
-
-
-
-    Route::get('/reservations/verify/{id}', [RestaurantController::class, 'verify'])->name('reservation.verify');
-
-    Route::get('/qrtest/{id}', [RestaurantController::class, 'generateQrCode']);
-    Route::get('/reservations/{id}/qrcode', [RestaurantController::class, 'showQrCode'])->name('reservation.qrcode');
-
-
-    Route::post('/favorite', [RestaurantController::class, 'favorite'])->name('favorite.store');
-
     Route::post('/reservations/{id}/delete', [MyPageController::class, 'destroy'])->name('reservations.destroy');
 
-    Route::post('/restaurants/{id}/favorite', [RestaurantController::class, 'favorite']);
-
-    Route::post('/restaurants/{id}/unfavorite', [RestaurantController::class, 'favorite'])->name('restaurants.favorite');
-    Route::post('/restaurants/{id}/unfavorite', [RestaurantController::class, 'unfavorite'])->name('restaurants.unfavorite');
-
-    Route::post('/reservations', [RestaurantController::class, 'store'])->name('reservation.store');
-
-    Route::post('/restaurants/{id}/rate', [RestaurantController::class, 'rate'])->name('restaurant.rate');
-
-
-    Route::get('/reservations/{id}/edit', [RestaurantController::class, 'edit'])->name('reservation.edit');
-    Route::put('/reservations/{id}', [RestaurantController::class, 'update'])->name('reservation.update');
-    Route::get('/reservations', [RestaurantController::class, 'index'])->name('reservations.index');
-
-    //ログイン
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // マイページ
+    Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage');
+
+    // プロフィール編集
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    
     Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
 });
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Flea</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{{ asset('css/icons.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <script src="{{ asset('js/app.js') }}"></script>
     @yield('css')
     @yield('js')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -44,12 +44,12 @@
         <div class="w-50">
             <x-my-text-input
                 class="search-text border border-gray-300 p-2"
-                id=""
-                type=""
-                name=""
-                :value="old('email')"
+                id="search-input"
+                type="text"
+                name="search"
+                :value="old('search')"
                 autofocus
-                autocomplete="username"
+                autocomplete="off"
                 placeholder="なにをお探しですか?" />
         </div>
         @endif
@@ -94,11 +94,6 @@
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Custom JS -->
-    <script>
-
-    </script>
 </body>
 
 

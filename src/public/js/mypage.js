@@ -1,63 +1,36 @@
-    $(document).ready(function() {
-        // 「おすすめ」をクリックしたときの処理
-        $('#recommend').on('click', function() {
-            // 「おすすめ」を赤文字にして、他の項目を元の色に戻す
-            $(this).addClass('active');
-            $('#mylist').removeClass('active');
+document.addEventListener('DOMContentLoaded', function () {
+    const showListingsButton = document.getElementById('show-listings');
+    const showPurchasesButton = document.getElementById('show-purchases');
+    const itemGrid = document.getElementById('item-grid');
+    const purchasedItemGrid = document.getElementById('purchased-item-grid');
 
-            // Ajaxリクエストで検索結果を取得
-            $.ajax({
-                url: '/items/recommend', // ルートURL
-                method: 'GET',
-                success: function(items) {
-                    // 結果を表示するエリア
-                    const $itemGrid = $('#item-grid');
-                    $itemGrid.empty(); // 既存のアイテムをクリア
+    function updateAriaPressed(selectedButton, deselectedButton) {
+        selectedButton.setAttribute('aria-pressed', 'true');
+        deselectedButton.setAttribute('aria-pressed', 'false');
+    }
 
-                    // 取得した商品アイテムを追加
-                    items.forEach(function(item) {
-                        $itemGrid.append(`
-                            <div class="col-4 text-center mb-4">
-                                <img src="${item.image}" class="img-fluid rounded" alt="${item.name}">
-                                <p>${item.name}</p>
-                            </div>
-                        `);
-                    });
-                },
-                error: function() {
-                    console.error('データの取得に失敗しました');
-                }
-            });
-        });
- 
-          $('#mylist').on('click', function() {
-            // 「おすすめ」を赤文字にして、他の項目を元の色に戻す
-            $(this).addClass('active');
-            $('#recommend').removeClass('active');
+    function showSection(sectionToShow, sectionToHide, buttonToSelect, buttonToDeselect) {
+        // ボタンの選択状態を切り替え
+        buttonToSelect.classList.add('selected');
+        buttonToDeselect.classList.remove('selected');
 
-            // Ajaxリクエストで検索結果を取得
-            $.ajax({
-                url: '/items/recommend', // ルートURL
-                method: 'GET',
-                success: function(items) {
-                    // 結果を表示するエリア
-                    const $itemGrid = $('#item-grid');
-                    $itemGrid.empty(); // 既存のアイテムをクリア
+        // ARIA属性を更新
+        updateAriaPressed(buttonToSelect, buttonToDeselect);
 
-                    // 取得した商品アイテムを追加
-                    items.forEach(function(item) {
-                        $itemGrid.append(`
-                            <div class="col-4 text-center mb-4">
-                                <img src="${item.image}" class="img-fluid rounded" alt="${item.name}">
-                                <p>${item.name}</p>
-                            </div>
-                        `);
-                    });
-                },
-                error: function() {
-                    console.error('データの取得に失敗しました');
-                }
-            });
-        });
+        // 商品一覧の表示・非表示を切り替え
+        sectionToShow.style.display = 'flex';
+        sectionToHide.style.display = 'none';
+    }
 
+    // 初期表示設定
+    itemGrid.style.display = 'flex';
+    purchasedItemGrid.style.display = 'none';
+
+    showListingsButton.addEventListener('click', function () {
+        showSection(itemGrid, purchasedItemGrid, showListingsButton, showPurchasesButton);
     });
+
+    showPurchasesButton.addEventListener('click', function () {
+        showSection(purchasedItemGrid, itemGrid, showPurchasesButton, showListingsButton);
+    });
+});

@@ -1,9 +1,40 @@
 $(document).ready(function () {
+    const $searchInput = $('#search-input');
+    const $itemCards = $('.item-card');
+    // 入力イベントを監視
+    $searchInput.on('input', function () {
+        const query = $(this).val().toLowerCase().trim();
+        console.log(query);
+                    
+        // 各アイテムをループして表示/非表示を切り替え
+        $itemCards.each(function() {
+            const itemName = $(this).data('name');
+            
+            if (itemName.includes(query)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // 該当アイテムがない場合のメッセージ表示
+        const visibleItems = $itemCards.filter(':visible').length;
+        const $itemGrid = $('#item-grid');
+
+        // 既にメッセージが表示されている場合は削除
+        $itemGrid.find('.no-results').remove();
+
+        if (visibleItems === 0) {
+            $itemGrid.append('<p class="no-results text-center mt-4">該当する商品がありません。</p>');
+        }
+    });
+
+
     $('#recommend, #mylist').on('click', function (e) {
+
         e.preventDefault(); // デフォルトのリンク動作を防止
 
         const url = $(this).find('a').attr('href');
-                console.log(url);
 
         $('#recommend a, #mylist a').removeClass('active-link');
         // クリックしたリンクに 'active-link' を追加

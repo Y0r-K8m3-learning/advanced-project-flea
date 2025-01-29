@@ -29,7 +29,7 @@
     <div class="container">
         <div class="row" id="item-grid">
             @foreach($items as $item)
-            <div class="col-4 text-center mb-4 col-md-3">
+            <div class="col-4 text-center mb-4 col-md-3 item-card" data-name="{{ strtolower($item->name) }}">
                 <a href="{{ route('items.detail', ['id' => $item->id]) }}" class="text-decoration-none">
                     <img src="{{ asset($item->image_url) }}" class="img-fluid rounded border" alt="{{ $item->name }}">
                     <p class="mt-2">{{ $item->name }}</p>

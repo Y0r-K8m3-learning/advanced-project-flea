@@ -12,6 +12,21 @@ use App\Models\UserDetail;
 class MyPageController extends Controller
 {
 
+    public function index()
+    {
+        $user = auth()->user();
+        // ユーザーの出品商品
+        $listings = $user->listings()->where('sales_flg', true)->get();
+
+        // ユーザーの購入商品
+        $purchasedItems = $user->purchasedItems()->where('sales_flg', false)->get();
+
+        // ユーザーの詳細情報
+        $userDetail = $user->userDetail;
+        return view('mypage', compact('listings', 'user', 'purchasedItems', 'userDetail'));
+    }
+
+
     public function address_index()
     {
         // ログインユーザーのID取得
@@ -77,47 +92,5 @@ class MyPageController extends Controller
 
         //return view('auth.profile_edit', ['user' => auth()->user()]);
         return view('auth.profile_edit', ['user' => $user]);
-    }
-    public function index()
-    {
-        // ダミーデータの設定
-        $listings = [
-            ['name' => '商品A', 'image' => 'images/product_a.png', 'price' => 1200],
-            ['name' => '商品B', 'image' => 'images/product_b.png', 'price' => 2500],
-        ];
-
-        $purchases = [
-            ['name' => '商品C', 'image' => 'images/product_c.png', 'price' => 3000],
-            ['name' => '商品D', 'image' => 'images/product_d.png', 'price' => 1800],
-        ];
-
-        // ビューにダミーデータを渡す
-        return view('mypage', compact('listings', 'purchases'));
-
-
-        $user = auth()->user();
-
-        // ダミーデータでリストを作成（後でDB接続に切り替え）
-        $listings = Product::where('user_id', $user->id)->get(); // 出品商品
-        $purchases = Product::whereHas('purchases', function ($query) use ($user) {
-            $query->where('user_id', $user->id); // 購入商品
-        })->get();
-
-        return view('mypage', [
-            'user' => $user,
-            'listings' => $listings,
-            'purchases' => $purchases,
-        ]);
-    }
-
-    public function destroy($id)
-    {
-        $user = Auth::user();
-
-        Reservation::where('user_id', $user->id)
-            ->where('id', $id)
-            ->delete();
-
-        return response()->json(['status' => 'deleted']);
     }
 }

@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+use App\Models\UserDetail;
 
 class ProfileController extends Controller
 {
@@ -16,9 +18,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = auth()->user();
+        $userDetail = $user->userDetail;
+
+        return view('auth.profile_edit', compact('user', 'userDetail'));
     }
 
     /**
@@ -32,9 +35,45 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user = auth()->user();
+        $userDetail = $user->userDetail;
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+
+        // アイコンのアップロード処理
+        if ($request->hasFile('icon')) {
+            // 既存のアイコンがあれば削除
+            if ($userDetail && $userDetail->image_id) {
+                Storage::delete($userDetail->image_id);
+            }
+
+            $path = $request->file('icon')->store('public/icons');
+            $validated['image_id'] = $path;
+        }
+
+        // ユーザー名の更新
+        $user->username = $validated['username'];
+        $user->save();
+
+        // ユーザー詳細の更新または作成
+        if ($userDetail) {
+            $userDetail->post_code = $validated['post_code'];
+            $userDetail->address = $validated['address'];
+            $userDetail->building = $validated['building'];
+            if (isset($validated['image_id'])) {
+                $userDetail->image_id = $validated['image_id'];
+            }
+            $userDetail->save();
+        } else {
+            UserDetail::create([
+                'user_id' => $user->id,
+                'post_code' => $validated['post_code'],
+                'address' => $validated['address'],
+                'building' => $validated['building'],
+                'image_id' => $validated['image_id'] ?? null,
+            ]);
+        }
+
+        return redirect()->route('mypage')->with('status', 'プロフィールが更新されました。');
     }
 
     /**

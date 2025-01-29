@@ -48,6 +48,9 @@ jobs:
 
                 # Composer 依存関係をインストール
                 sudo docker-compose exec php bash -c "composer install" || { echo "Composer install failed"; exit 1; }
+                
+                # phpunit をインストール
+                sudo docker-compose exec php bash -c "composer require --dev phpunit/phpunit" || { echo "phpunit install failed"; exit 1; }
 
                 # .env ファイルをコピー（存在しない場合のみ）
                 sudo docker-compose exec php bash -c 'if [ ! -f .env ]; then cp -p .env.example .env; fi' || { echo ".env copy failed"; exit 1; }
@@ -55,9 +58,12 @@ jobs:
                 # Laravel アプリケーションキーを生成
                 sudo docker-compose exec php bash -c "php artisan key:generate" || { echo "Laravel key generation failed"; exit 1; }
 
+                 # ストレージリンクを作成
+                sudo docker-compose exec php bash -c "php artisan storage:link" || { echo "Storage link failed"; exit 1; }
+
                 # MySQLコンテナを再起動
                 sudo docker-compose restart mysql || { echo "MySQL restart failed"; exit 1; }
-
+        
                 # MySQLが起動するまで待機（最大10秒）
                 echo "Waiting for MySQL to be ready..."
                 for i in {1..10}; do
