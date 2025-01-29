@@ -9,7 +9,7 @@
  - 独自のフリマアプリを展開
 
  ## アプリケーションURL
- - デプロイ用
+ - デプロイ用(SSL認証なし、http接続のみ有効）
    
 ### [fleaApp](http://ec2-57-180-199-228.ap-northeast-1.compute.amazonaws.com/)
 
