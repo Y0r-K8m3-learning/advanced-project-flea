@@ -40,7 +40,7 @@ jobs:
                 git clone https://github.com/Y0r-K8m3-learning/advanced-project-flea.git .
                 
                 sudo chmod 777 -R *
-
+                
                 # Docker コンテナをビルドして起動
                 sudo docker-compose up -d --build || { echo "Docker Compose failed"; exit 1; }
                 
@@ -97,9 +97,6 @@ jobs:
                   echo "PM2 is already installed."
                 fi
 
-                # アプリケーションを PM2 で再起動
-                pm2 restart all || { echo "PM2 restart failed"; exit 0; }
-
                 # デプロイ完了フラグを作成
                 touch .deployed
               else
@@ -142,7 +139,6 @@ jobs:
                 docker-compose exec php bash -c "npm install" || { echo "NPM install failed"; exit 1; }
                 docker-compose exec php bash -c "npm run build" || { echo "NPM build failed"; exit 1; }
 
-                # アプリケーションを PM2 で再起動
                 pm2 restart all || { echo "PM2 restart failed"; exit 0; }
 
 
