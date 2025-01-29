@@ -20,15 +20,6 @@ Route::post('/login', [AuthController::class, 'postLogin']);
 Route::get('/items/{id}', [ItemController::class, 'showDetail'])->name('items.detail');
 
 
-Route::get('/', [
-    RestaurantController::class,
-    'index'
-])->name('index');
-
-
-Route::get('/complete', [StripePaymentsController::class, 'complete'])->name('complete');
-
-Route::get('/reservation/complete', [RestaurantController::class, 'complete'])->name('reservation.complete');
 
 Route::get('/', [ItemController::class, 'index'])->name('index');
 Route::get('/', [ItemController::class, 'index'])->name('home');

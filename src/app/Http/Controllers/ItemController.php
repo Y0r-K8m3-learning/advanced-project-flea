@@ -105,14 +105,15 @@ class ItemController extends Controller
         $comments = Review::where('item_id', $id)
             ->orderBy('created_at', 'desc')
             ->get();
+        foreach ($comments as $comment)
 
-        return view(
-            'detail',
-            [
-                'item' => $item,
-                'comments' => $comments
-            ]
-        );
+            return view(
+                'detail',
+                [
+                    'item' => $item,
+                    'comments' => $comments
+                ]
+            );
     }
     public function itemCreate()
     {
