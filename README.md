@@ -16,7 +16,7 @@
 
  ## リポジトリURL
  - 開発用
- ### [[github](https://github.com/Y0r-K8m3-learning/advanced-project-rese)](https://github.com/Y0r-K8m3-learning/advanced-project-flea/)
+ ### [[github](https://github.com/Y0r-K8m3-learning/advanced-project-flea)](https://github.com/Y0r-K8m3-learning/advanced-project-flea/)
  
  ## 機能一覧
  - ログイン
@@ -54,7 +54,7 @@
 ### Docker環境で実行
 ### ビルドからマイグレーション、シーディングまでを記述する
 - Dockerビルド 
- 1. `git clone https://github.com/Y0r-K8m3-learning/advanced-project-rese.git`
+ 1. `git clone https://github.com/Y0r-K8m3-learning/advanced-project-flea.git`
  2. `cd advanced-project-rese`
  3. `docker-compose up -d --build`
  
